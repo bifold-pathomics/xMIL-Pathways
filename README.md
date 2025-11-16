@@ -1,11 +1,13 @@
 # xMIL-Pathways
-Code for the paper "Biology-informed digital pathology biomarkers for head and neck cancer patient stratification"
 
-Codes of this manuscript (except training/testing that should be done from xMIL repo)
+Dear all,
 
-- [ ] IHC-HE registration 
-- [ ] computing cell activation sums within patches
-- [ ] plotting and statistical analysis for cell activation 
-- [ ] tissue segmentation model
-- [ ] code for tumor border detection
-- [ ] R-codes for all the analyses of Figure 3 
+please see the todo list below and push your codes to a branch and open a PR. you may remove `__init__.py` from your folder.
+
+
+- [ ] IHC-HE registration [Mina/Julius]
+- [ ] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
+- [ ] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
+- [ ] plotting and statistical analysis for cell activation [Laure] --> folder: cell_activations_analyses
+- [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
+- [ ] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
