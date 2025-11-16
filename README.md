@@ -12,5 +12,6 @@ orient themselves in the repo.**
 - [ ] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
 - [ ] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
 - [ ] plotting and statistical analysis for cell activation [Laure] --> folder: cell_activations_analyses
+- [ ] heatmap aggregation [Julius] 
 - [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
 - [ ] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
