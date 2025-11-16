@@ -4,6 +4,9 @@ Dear all,
 
 please see the todo list below and push your codes to a branch and open a PR. you may remove `__init__.py` from your folder.
 
+**Please add a description of your code in this readme file so that we can after collecting all info organize it. 
+your description doesn't need to be very detailed, but it should be detailed enough for a user to be able to 
+orient themselves in the repo.**
 
 - [ ] IHC-HE registration [Mina/Julius, all]
 - [ ] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
