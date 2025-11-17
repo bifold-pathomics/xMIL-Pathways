@@ -18,8 +18,8 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--results-dir', type=str, required=True)
-    parser.add_argument('--patient_id', type=str, required=True)
-    parser.add_argument('--patient_slides-dir', type=str, required=True)
+    parser.add_argument('--patient-id', type=str, required=True)
+    parser.add_argument('--patient-slides-dir', type=str, required=True)
     parser.add_argument('--crop', type=str, default=None)
     parser.add_argument('--do-not-save', action='store_true')
     parser.add_argument('--micro-registration', action='store_true')
@@ -39,11 +39,11 @@ def main():
     print(slides_this_patient)
 
     # patient slide info  -------------------
-    patient_HnE = [op.join(args.slide_src_dir, name) for name in slides_this_patient if 'HE' in name][0]
+    patient_HnE = [op.join(args.patient_slides_dir, name) for name in slides_this_patient if 'HE' in name][0]
     print('HnE: ', patient_HnE)
     print('-------------------------')
 
-    slides_this_patient = [op.join(args.slide_src_dir, s) for s in slides_this_patient]
+    slides_this_patient = [op.join(args.patient_slides_dir, s) for s in slides_this_patient]
 
     # save folder -------------------
     results_dst_dir = os.path.join(args.results_dir, args.patient_id)
@@ -56,7 +56,7 @@ def main():
         json.dump(vars(args), f, indent=4)
 
     # registrar info -------------------
-    registrar = registration_valis.Valis(args.slide_src_dir, results_dst_dir, align_to_reference=True,
+    registrar = registration_valis.Valis(args.patient_slides_dir, results_dst_dir, align_to_reference=True,
                                          reference_img_f=patient_HnE, crop=args.crop,
                                          img_list=slides_this_patient)
 
