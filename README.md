@@ -15,4 +15,4 @@ orient themselves in the repo.**
 - [ ] heatmap aggregation [Julius] (this is already contributed by Laure, as Julius has used the code to reproduce virchow2, I think he is familiar now where is what\M)
 - [ ] TAPAS computations [Julius]
 - [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
-- [ ] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
+- [X] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
