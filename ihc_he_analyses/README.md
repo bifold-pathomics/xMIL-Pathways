@@ -32,7 +32,8 @@ For this part, you would need to have created the aggregated heatmap and then fo
     The `slide_registration.py` does the registration, and you can run the pipeline for patient P6 using `run_scripts/run_slide_registration.sh`.
 2. **Compute the QuPath measurements from the IHCs**
 
-    TODO:ANDY
+    Please see the manuscript for the descriptions. The analysis should result in a dataframe similar to 
+    `zenodo_sample/qupath_measurements/pSTAT3/P6.pSTAT3.tsv`.
 
 3. **Overlap the cell activations and the H&E heatmaps**
     

@@ -11,7 +11,7 @@ orient themselves in the repo.**
 - [ ] constructing the readme [Mina/Julius, all]
 - [x] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
 - [x] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
-- [ ] plotting and statistical analysis for cell activation [Mina] --> folder: cell_activations_analyses
+- [x] plotting and statistical analysis for cell activation [Mina/Laure] --> folder: cell_activations_analyses
 - [ ] heatmap aggregation [Julius] (this is already contributed by Laure, as Julius has used the code to reproduce virchow2, I think he is familiar now where is what\M)
 - [ ] TAPAS computations [Julius]
 - [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
