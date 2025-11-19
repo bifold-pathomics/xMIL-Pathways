@@ -1,4 +1,27 @@
-# xMIL-Pathways
+Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer
+==========
+
+![version](https://img.shields.io/badge/version-0.1-blue)
+![Python](https://img.shields.io/badge/Python-3.9-green)
+
+<details>
+<summary>
+  <b>Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer</b>, arXiv, 2024.
+  <br><em>Julius Hense*, Mina Jamshidi Idaji*, Laure Ciernik, Jonas Dippel,
+Fatma Ersan, Maximilian Knebel, Ada Pusztai, Andrea Sendelhofert,
+Oliver Buchstab, Stefan Fr¨ohling, Sven Otto, Jochen Hess, Paris Liokatis,
+Frederick Klauschen, Klaus-Robert M¨uller, Andreas Mock </em></br>
+* Equal contribution
+
+:octocat: https://github.com/tubml-pathology/xMIL-Pathways
+
+</summary>
+
+```bash
+citation bibtex
+```
+
+</details>
 
 Dear all,
 
