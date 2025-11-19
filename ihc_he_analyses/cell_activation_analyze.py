@@ -17,7 +17,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from collections import defaultdict
-from visualization.slideshow import heatmap_PIL, plot_PIL
+from visualization_utils import heatmap_PIL, plot_PIL
 
 # Suppress all warnings
 warnings.filterwarnings("ignore")
@@ -26,8 +26,7 @@ warnings.filterwarnings("ignore")
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--patient-id', type=str, required=True)
-    parser.add_argument('--marker', type=str, required=True,
-                        choices=['cd34', 'pstat3', 'tnfa'], help="The name of the IHC marker")
+    parser.add_argument('--marker', type=str, required=True, help="The name of the IHC marker")
     parser.add_argument('--tiles-dirs', type=str, nargs='+', required=True,
                         help='The directory of the extracted patches from the HE slide.')
     parser.add_argument('--registration-dir', type=str, required=True, help="The directory of registered slides")
@@ -43,8 +42,8 @@ def get_args():
     return args
 
 
-def main(args):
-    args = get_args() if args is None else args
+def main():
+    args = get_args()
     print(json.dumps(vars(args), indent=4))
 
     if args.marker.lower() == 'cd34':
@@ -53,18 +52,16 @@ def main(args):
         pathway = 'JAK-STAT'
     elif args.marker.lower() == 'tnfa':
         pathway = 'TNFa'
-
-    cell_act_dir = os.path.join(args.qupath_measurement_dir, args.marker)
-
-    aggregated_heatmaps_dirs = [os.path.join(p, pathway, 'aggregated', 'predictions') for p in args.predictions_dirs]
-
     print('*************patient ID=', args.patient_id)
 
+    # define directories
+
+    cell_act_dir = os.path.join(args.qupath_measurement_dir, args.marker)
+    aggregated_heatmaps_dirs = [os.path.join(p, pathway) for p in args.predictions_dirs]
     reg_patient_dir = os.path.join(args.registration_dir, args.patient_id)
     reg_mask_path = str(list(Path(reg_patient_dir).rglob('**/*_non_rigid_mask.png'))[0])
     reg_slides_dir = os.path.join(reg_patient_dir, 'registered_slides')
 
-    # timestamp = datetime.now().strftime("%Y_%m_%d__%H_%M_%S")
     results_dir = os.path.join(args.results_dir, args.patient_id)
     if not os.path.isdir(results_dir):
         os.mkdir(results_dir)
@@ -73,33 +70,40 @@ def main(args):
     with open(os.path.join(results_dir, 'args.json'), 'w') as f:
         json.dump(vars(args), f, indent=4)
 
+    # file names
+
     cell_act_path = [os.path.join(cell_act_dir, s) for s in os.listdir(cell_act_dir)
-                     if args.patient_id in s and (args.marker.upper() in s or args.marker in s)][0]
-    print('cell_act_path= ', cell_act_path)
+                     if args.patient_id in s and (args.marker.upper() in s or args.marker in s)][0]  # the qupath file
+
+    print('QuPath measurement file name = ', cell_act_path)
     HE_slide_name = [f for f in os.listdir(reg_slides_dir) if 'HE' in f][0]
     HE_slide_name = HE_slide_name[:HE_slide_name.index('.ome.tiff')]
-    print('HE slide=', HE_slide_name)
+    print('HE slide name =', HE_slide_name)
 
     for aggregated_heatmaps_dir in aggregated_heatmaps_dirs:
         folder = [p for p in os.listdir(aggregated_heatmaps_dir) if HE_slide_name in p]
         if len(folder) == 0:
             folder = [p for p in os.listdir(aggregated_heatmaps_dir) if args.patient_id in p and 'HE' in p]
+
         if len(folder) > 0:
             heatmap_path = os.path.join(aggregated_heatmaps_dir, folder[0])
             break
 
-    print('heatmap_path= ', heatmap_path)
+    print('heatmap path = ', heatmap_path)
 
     for tiles_dir in args.tiles_dirs:
         folder = [p for p in os.listdir(tiles_dir) if HE_slide_name in p]
         if len(folder) == 0:
             folder = [p for p in os.listdir(tiles_dir) if args.patient_id in p and 'HE' in p]
+
         if len(folder) > 0:
             tiles_metadata_path = os.path.join(tiles_dir, folder[0], 'metadata')
             break
-    print('tiles_metadata_path= ', tiles_metadata_path)
+    print('tiles metadata path = ', tiles_metadata_path)
 
-    cell_act_info = pd.read_csv(cell_act_path, sep='\t')
+    # read metadata and slides
+
+    cell_act_info = pd.read_csv(cell_act_path)
     slide_name = cell_act_info['Image'].iloc[0]
     print('cell activation calculated for: ', slide_name)
 
@@ -119,9 +123,10 @@ def main(args):
     tiles_metadata_orig['y_coords'] = tiles_metadata_orig['position_abs'].apply(
         lambda x: json.loads(x.replace('(', '[').replace(')', ']'))[1])
 
-    image = cv2.imread(reg_mask_path)
-    # plt.imshow(image)
+    # find the tissue mask -- this step can be skipped if the preprocessing pipeline has a tissue detection step
+    # we do the following to exclude the tiles which are not in the main tissue
 
+    image = cv2.imread(reg_mask_path)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # green in HSV
@@ -192,6 +197,8 @@ def main(args):
 
     x_coords_all_patches = tiles_metadata['x_coords'].tolist()
     y_coords_all_patches = tiles_metadata['y_coords'].tolist()
+
+    # match the tiles and the activations from qupath
 
     tiles2cell_cont = defaultdict(list)
     tiles2cell_classification = defaultdict(list)
@@ -267,23 +274,24 @@ def main(args):
         patches=tiles_metadata, size=overlay_dims, patch_ids=patch_ids, slide_dim=slide_HE.dimensions,
         score_values=patch_scores_binary, cmap_name=cmap_name, zero_centered=True)
 
-    fig = plt.figure(figsize=(15, 20))
-    ax = fig.add_subplot(121)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
 
     plot_PIL(ax, heatmap, cmap=cmap_name)
     plt.title('sum of binary')
-
+    plt.savefig(os.path.join(results_dir, 'cell_activations_binary.png'), format='png', dpi=300)
     # -----------
     heatmap, _ = heatmap_PIL(
         patches=tiles_metadata, size=overlay_dims, patch_ids=patch_ids, slide_dim=slide_HE.dimensions,
         score_values=patch_scores, cmap_name=cmap_name, zero_centered=True)
 
-    ax = fig.add_subplot(122)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
 
     plot_PIL(ax, heatmap, cmap=cmap_name)
     plt.title('sum of continuous')
 
-    plt.savefig(os.path.join(results_dir, 'cell_activations.png'), format='png', dpi=300)
+    plt.savefig(os.path.join(results_dir, 'cell_activations_continuous.png'), format='png', dpi=300)
 
     df_tiles_cells_lrps['mean_lrp_masked'] = df_tiles_cells_lrps['mean_lrp']
     df_tiles_cells_lrps.loc[~df_tiles_cells_lrps['mask'], 'mean_lrp_masked'] = 0
