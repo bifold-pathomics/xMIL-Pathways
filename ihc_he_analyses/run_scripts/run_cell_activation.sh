@@ -4,11 +4,11 @@ patient_id=P6
 marker=pSTAT3
 activation_marker='Nucleus: DAB OD mean'
 
-zenodo_sample_dir=/home/space/oncology/multimodal-fusion/data/lmu/zenodo_sample
+zenodo_sample_dir=/path/to/zenodo_sample
 tiles_dirs=( "$zenodo_sample_dir"/patches )
 reg_dir="$zenodo_sample_dir"/results/registration
 qupath_measurements_dir="$zenodo_sample_dir"/qupath_measurements
-predictions_dirs=( /home/space/oncology/multimodal-fusion/data/lmu/zenodo_sample/predictions )
+predictions_dirs=( "$zenodo_sample_dir"/predictions )
 results_dir="$zenodo_sample_dir"/results/ihc_he_analysis
 mkdir -p $results_dir
 
