@@ -3,7 +3,6 @@ import json
 import argparse
 from datetime import datetime
 
-import pandas as pd
 import torch
 from torch.utils.tensorboard import SummaryWriter
 
