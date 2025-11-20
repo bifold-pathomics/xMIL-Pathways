@@ -39,6 +39,7 @@ orient themselves in the repo.**
 - [ ] TAPAS computations [Julius]
 - [X] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
 - [X] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
+- [ ] make the visualization tool coherent: repeated code is used in ihc-he and segmentation folders. see branch `feature-visualization` [M/J]
 
 
 ### Tissue Segmentation
