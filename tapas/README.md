@@ -29,3 +29,10 @@ This code derives the Tumor Area Pathway Activation Score (TAPAS) for an example
 
 1. ```cd tapas```
 2. Run ```run_scripts/compute_tapas_JAK-STAT.sh```. The results will be written to the directory specified in this bash script.
+
+Requirements:
+```
+pandas
+tqdm
+torch
+```
