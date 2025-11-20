@@ -48,11 +48,11 @@ The workflow of this work is as follows:
     For this step, you can use the code in the folder [heatmap_aggregation](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/heatmap_aggregation).
 3. Perform tissue segmentation: for our subsequent analyses, we segment the H&E slide into tumor, non-tumor, and border.
     For this step, you can use the code in the folder [tissue_segmentation](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/tissue_segmentation).
-4. From the tumor area and the generated (aggregated) heatmap, you can compute TAPAS score.
-   For this step, you can use the code in the folder [tapas](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/tapas).
-5. You can perform the IHC-H&E analyses using the code at folder [ihc_he_analyses](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/ihc_he_analyses). 
+4. You can perform the IHC-H&E analyses using the code at folder [ihc_he_analyses](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/ihc_he_analyses). 
    This includes IHC-H&E registration, aggregating the IHC activations within the patches of the H&E slide and overlapping 
    the heatmap and IHC activations.
+5. From the tumor area and the generated (aggregated) heatmap, you can compute TAPAS score.
+   For this step, you can use the code in the folder [tapas](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/tapas).
 6. You can find the code for analyses doing patient stratification using TAPAS score and clinical metadata at
     [patient_stratification](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/patient_stratification).
 
