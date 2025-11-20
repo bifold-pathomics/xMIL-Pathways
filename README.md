@@ -1,4 +1,27 @@
-# xMIL-Pathways
+Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer
+==========
+
+![version](https://img.shields.io/badge/version-0.1-blue)
+![Python](https://img.shields.io/badge/Python-3.9-green)
+
+<details>
+<summary>
+  <b>Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer</b>, arXiv, 2024.
+  <br><em>Julius Hense*, Mina Jamshidi Idaji*, Laure Ciernik, Jonas Dippel,
+Fatma Ersan, Maximilian Knebel, Ada Pusztai, Andrea Sendelhofert,
+Oliver Buchstab, Stefan Fr¨ohling, Sven Otto, Jochen Hess, Paris Liokatis,
+Frederick Klauschen, Klaus-Robert M¨uller, Andreas Mock </em></br>
+* Equal contribution
+
+:octocat: https://github.com/tubml-pathology/xMIL-Pathways
+
+</summary>
+
+```bash
+citation bibtex
+```
+
+</details>
 
 Dear all,
 
@@ -9,9 +32,9 @@ your description doesn't need to be very detailed, but it should be detailed eno
 orient themselves in the repo.**
 
 - [ ] constructing the readme [Mina/Julius, all]
-- [ ] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
-- [ ] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
-- [ ] plotting and statistical analysis for cell activation [Laure] --> folder: cell_activations_analyses
+- [x] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
+- [x] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
+- [x] plotting and statistical analysis for cell activation [Mina/Laure] --> folder: cell_activations_analyses
 - [ ] heatmap aggregation [Julius] (this is already contributed by Laure, as Julius has used the code to reproduce virchow2, I think he is familiar now where is what\M)
 - [ ] TAPAS computations [Julius]
 - [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
