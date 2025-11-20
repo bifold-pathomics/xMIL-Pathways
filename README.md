@@ -37,5 +37,26 @@ orient themselves in the repo.**
 - [x] plotting and statistical analysis for cell activation [Mina/Laure] --> folder: cell_activations_analyses
 - [ ] heatmap aggregation [Julius] (this is already contributed by Laure, as Julius has used the code to reproduce virchow2, I think he is familiar now where is what\M)
 - [ ] TAPAS computations [Julius]
-- [ ] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
+- [X] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
 - [X] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
+
+
+### Tissue Segmentation
+1. ```cd tissue_segmentation```
+2. Run ```run_scripts/seg_model_training.sh``` to train the segmentation model. Note: This is not generally functional as we cannot publish the underlying data. The resulting model checkpoint is provided at: ```/home/space/oncology/multimodal-fusion/data/lmu/zenodo_sample/results/segmentation/models/2024_07_12__17_10_48```.
+3. Run ```run_scripts/seg_model_inference.sh``` to apply the segmentation model to the example slide.
+4. Run ```run_scripts/seg_model_postprocessing.sh``` to run neighborhood smoothing and border estimation and to generate visualizations.
+
+Requirements:
+```
+openslide
+pandas
+numpy
+torch
+sklearn
+scipy
+PIL
+matplotlib
+tensorboard
+tqdm
+```
