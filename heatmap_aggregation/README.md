@@ -28,7 +28,7 @@ citation bibtex
 You can find the LRP heatmaps from the five JAK-STAT prediction models for the example slide (P6..HE-PRE) at: `/path/to/zenodo_sample/heatmaps/JAK-STAT/model{0-4}/overlays`. They were created using the [xMIL](https://github.com/bifold-pathomics/xMIL) repository.
 Run the following code to combine those heatmaps:
 
-1. ```cd heatmaps```
+1. ```cd heatmap_aggregation```
 2. Run ```run_scripts/combine_heatmaps_JAK-STAT.sh``` to combine the heatmaps according to the strategy described in the paper. The results will be written to the specified folder. The ground truth results are also provided at: `/path/to/zenodo_sample/heatmaps/JAK-STAT/aggregated`.
 
 Requirements
