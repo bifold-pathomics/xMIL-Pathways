@@ -54,7 +54,7 @@ The workflow of this work is as follows:
    This includes IHC-H&E registration, aggregating the IHC activations within the patches of the H&E slide and overlapping 
    the heatmap and IHC activations.
 6. You can find the code for analyses doing patient stratification using TAPAS score and clinical metadata at
-    [patient_stratification](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/patient_stratification)
+    [patient_stratification](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/patient_stratification).
 
 
 ## Contact us
