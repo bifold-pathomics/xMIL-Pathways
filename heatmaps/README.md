@@ -30,3 +30,13 @@ Run the following code to combine those heatmaps:
 
 1. ```cd heatmaps```
 2. Run ```run_scripts/combine_heatmaps_JAK-STAT.sh``` to combine the heatmaps according to the strategy described in the paper. The results will be written to the specified folder. The ground truth results are also provided at: `/path/to/zenodo_sample/heatmaps/JAK-STAT/aggregated`.
+
+Requirements
+```
+openslide
+numpy
+pandas
+tqdm
+matplotlib
+PIL
+```
