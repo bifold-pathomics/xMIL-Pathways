@@ -45,7 +45,7 @@ The workflow of this work is as follows:
     For this step, we used a codebase developed by us, publicly available at [xMIL](https://github.com/bifold-pathomics/xMIL).
     Please also see our [NeurIPS 2024 publication](https://proceedings.neurips.cc/paper_files/paper/2024/hash/0f9e0309d8a947ca44463a9b7e8b6a3f-Abstract-Conference.html) about explaining MIL models.
 2. If you have multiple models (e.g., from your cross-validation training), aggregate the heatmaps.
-    For this step, you can use the code in the folder [heatmap_aggregation](https://github.com/bifold-pathomics/xMIL-Pathways/heatmap_aggregation).
+    For this step, you can use the code in the folder [heatmap_aggregation](https://github.com/bifold-pathomics/xMIL-Pathways/tree/main/heatmap_aggregation).
 3. Perform tissue segmentation: for our subsequent analyses, we segment the H&E slide into tumor, non-tumor, and border.
     For this step, you can use the code in the folder [tissue_segmentation](https://github.com/bifold-pathomics/xMIL-Pathways/tissue_segmentation).
 4. From the tumor area and the generated (aggregated) heatmap, you can compute TAPAS score.
