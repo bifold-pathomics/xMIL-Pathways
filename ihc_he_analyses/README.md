@@ -31,6 +31,8 @@ For this part, you would need to have created the aggregated heatmap and then fo
 
     We register IHC slide(s) on the H&E slide using [VALIS](https://valis.readthedocs.io/en/latest/). 
     The `slide_registration.py` does the registration, and you can run the pipeline for patient P6 using `run_scripts/run_slide_registration.sh`.
+    Note that since our slides have multiple dots in their names, we had to do a slight modification in VALIS.
+    Please see [this issue](https://github.com/MathOnco/valis/issues/170) and the modification suggested by user `minajamshidi`.
 2. **Compute the QuPath measurements from the IHCs**
 
     Please see the manuscript for the descriptions. The analysis should result in a dataframe similar to 

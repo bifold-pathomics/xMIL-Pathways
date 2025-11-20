@@ -1,6 +1,11 @@
 Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer
 ==========
 
+# TODO
+- [ ] check all the referenced links work
+- [ ] the `pip_requirement.txt` should be updated with the versions
+
+
 ![version](https://img.shields.io/badge/version-0.1-blue)
 ![Python](https://img.shields.io/badge/Python-3.9-green)
 
