@@ -23,40 +23,47 @@ citation bibtex
 
 </details>
 
-Dear all,
 
-please see the todo list below and push your codes to a branch and open a PR. you may remove `__init__.py` from your folder.
-
-**Please add a description of your code in this readme file so that we can after collecting all info organize it. 
-your description doesn't need to be very detailed, but it should be detailed enough for a user to be able to 
-orient themselves in the repo.**
-
-- [ ] constructing the readme [Mina/Julius, all]
-- [x] IHC-HE registration [Mina] --> folder:  IHC_HE_registration
-- [x] computing cell activation sums within patches [Mina] --> folder: cell_activations_analyses
-- [x] plotting and statistical analysis for cell activation [Mina/Laure] --> folder: cell_activations_analyses
-- [ ] heatmap aggregation [Julius] (this is already contributed by Laure, as Julius has used the code to reproduce virchow2, I think he is familiar now where is what\M)
-- [ ] TAPAS computations [Julius]
-- [X] tissue segmentation (tumor segmentation and tumor border detection) [Julius] --> folder: tumor_segmentation
-- [X] R-codes for all the analyses of Figure 3 [Andy] --> folder: patient_stratification
+**Summary**: In this work, we infer transcriptome-derived signaling pathway activities 
+directly from routine H&E slides. We propose  to use the MIL heatmaps for stratifying the patients. 
+In this regard we propose spatial activity metric (TAPAS) quantifying intratumoral heterogeneity based on XAI heatmaps. 
+In this repository, we share the codes for this manuscript. We have also shared data of an exemplar patient at Zenodo. 
+We have prepared the pipelines in the way that they work fluently with the shared data.
 
 
-### Tissue Segmentation
-1. ```cd tissue_segmentation```
-2. Run ```run_scripts/seg_model_training.sh``` to train the segmentation model. Note: This is not generally functional as we cannot publish the underlying data. The resulting model checkpoint is provided at: ```/home/space/oncology/multimodal-fusion/data/lmu/zenodo_sample/results/segmentation/models/2024_07_12__17_10_48```.
-3. Run ```run_scripts/seg_model_inference.sh``` to apply the segmentation model to the example slide.
-4. Run ```run_scripts/seg_model_postprocessing.sh``` to run neighborhood smoothing and border estimation and to generate visualizations.
+## Usage
 
-Requirements:
+The workflow of this work is as the following:
+
+1. Train a (Transformer-based) MIL model to predict the biomarker from H&E slide and create heatmaps for the test set.
+    For this step, we used a code-base developed by us, publicly available at [xMIL](https://github.com/tubml-pathology/xMIL).
+    Please also see our [NeurIPS 2024 publication](https://proceedings.neurips.cc/paper_files/paper/2024/hash/0f9e0309d8a947ca44463a9b7e8b6a3f-Abstract-Conference.html) about explaining MIL models.
+2. If you have multiple models (e.g., from your cross-validation training), aggregated the heatmaps.
+    For this step, you can use the code at folder [heatmap_aggregation](https://github.com/tubml-pathology/xMIL-Pathways/heatmap_aggregation).
+3. Perform tissue segmentation: for our subsequent analyses we segment the H&E slide into tumor, non-tumor, and border.
+    For this step, you can use the code at folder [tissue_segmentation](https://github.com/tubml-pathology/xMIL-Pathways/tissue_segmentation).
+    Please see 
+   [tissue_segmentation/README.md](https://github.com/tubml-pathology/xMIL-Pathways/tissue_segmentation/README.md) for detailed info.
+4. From the tumor area and the generated (aggregated) heatmap, you can compute TAPAS score.
+   For this step, you can use the code at folder [computing_tapas](https://github.com/tubml-pathology/xMIL-Pathways/computing_tapas).
+5. You can perform the IHC-H&E analyses using the code at folder [ihc_he_analyses](https://github.com/tubml-pathology/xMIL-Pathways/ihc_he_analyses). 
+   This includes IHC-H&E registration, aggregating the IHC activations within the patches of the H&E slide and overlapping 
+   the heatmap and IHC activations. Please see 
+   [ihc_he_analyses/README.md](https://github.com/tubml-pathology/xMIL-Pathways/ihc_he_analyses/README.md) for detailed info.
+6. You can find the code for analyses doing patient stratification using TAPAS score and clinical metadata at
+    [patient_stratification](https://github.com/tubml-pathology/xMIL-Pathways/patient_stratification)
+
+
+## Contact us
+If you face issues using our codes, you can open an issue in this repository, or contact us: 
+
+:email: [Julius Hense](https://github.com/hense96) and [Mina Jamshidi](https://github.com/minajamshidi)
+
+## License and citation
+If you find our codes useful in your work, please cite us:
+```bash
+citation bibtex
 ```
-openslide
-pandas
-numpy
-torch
-sklearn
-scipy
-PIL
-matplotlib
-tensorboard
-tqdm
-```
+
+:copyright: This code is provided under CC BY-NC-ND 4.0. 
+Please refer to the license file for details.

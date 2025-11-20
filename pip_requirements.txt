@@ -1,0 +1,10 @@
+openslide
+pandas
+numpy
+torch
+sklearn
+scipy
+PIL
+matplotlib
+tensorboard
+tqdm
