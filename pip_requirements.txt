@@ -1,0 +1,14 @@
+openslide
+pandas
+numpy
+torch
+sklearn
+scipy
+PIL
+matplotlib
+tensorboard
+tqdm
+valis-wsi==1.0.4
+seaborn==0.13.2
+opencv-python==4.11.0.86
+pillow==9.5.0
