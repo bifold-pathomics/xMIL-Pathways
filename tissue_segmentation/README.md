@@ -17,13 +17,13 @@ Frederick Klauschen, Klaus-Robert Müller, Andreas Mock </em></br>
 </summary>
 
 ```bash
-@article{hense2025digital,
-  title={Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
-  author={Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Froehling, Stefan and Otto, Sven and  Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and Müller, Klaus-Robert and Mock, Andreas},
-  journal={bioRxiv},
-  pages={2025--11},
-  year={2025},
-  publisher={Cold Spring Harbor Laboratory}
+@article {Hense2025.11.24.689710,
+	author = {Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Fr{\"o}hling, Stefan and Otto, Sven and Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and M{\"u}ller, Klaus-Robert and Mock, Andreas},
+	title = {Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
+	year = {2025},
+	doi = {10.1101/2025.11.24.689710},
+	publisher = {Cold Spring Harbor Laboratory},
+	journal = {bioRxiv}
 }
 ```
 
