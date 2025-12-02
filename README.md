@@ -1,12 +1,6 @@
 Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer
 ==========
 
-# TODO
-- [ ] check all the referenced links work
-- [ ] the `pip_requirement.txt` should be updated with the versions
-- [ ] visualization tools
-
-
 ![version](https://img.shields.io/badge/version-0.1-blue)
 ![Python](https://img.shields.io/badge/Python-3.9-green)
 
@@ -16,7 +10,7 @@ Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck
   <br><em>Julius Hense*, Mina Jamshidi Idaji*, Laure Ciernik, Jonas Dippel,
 Fatma Ersan, Maximilian Knebel, Ada Pusztai, Andrea Sendelhofert,
 Oliver Buchstab, Stefan Fr¨ohling, Sven Otto, Jochen Hess, Paris Liokatis,
-Frederick Klauschen, Klaus-Robert M¨uller, Andreas Mock </em></br>
+Frederick Klauschen, Klaus-Robert Müller, Andreas Mock </em></br>
 * Equal contribution
 
 :octocat: https://github.com/tubml-pathology/xMIL-Pathways
@@ -24,7 +18,14 @@ Frederick Klauschen, Klaus-Robert M¨uller, Andreas Mock </em></br>
 </summary>
 
 ```bash
-citation bibtex
+@article{hense2025digital,
+  title={Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
+  author={Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Froehling, Stefan and Otto, Sven and  Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and Müller, Klaus-Robert and Mock, Andreas},
+  journal={bioRxiv},
+  pages={2025--11},
+  year={2025},
+  publisher={Cold Spring Harbor Laboratory}
+}
 ```
 
 </details>
@@ -33,7 +34,7 @@ citation bibtex
 **Summary**: In this work, we infer transcriptome-derived signaling pathway activities 
 directly from routine H&E slides. We propose  to use the MIL heatmaps for stratifying the patients. 
 In this regard we propose spatial activity metric (TAPAS) quantifying intratumoral heterogeneity based on XAI heatmaps. 
-In this repository, we share the codes for this manuscript. We have also shared data of an exemplar patient at Zenodo. 
+In this repository, we share the codes for this manuscript. We will soon also share data of an exemplar patient at Zenodo. 
 We have prepared the pipelines in the way that they work fluently with the shared data.
 
 
@@ -68,7 +69,14 @@ If you face issues using our codes, you can open an issue in this repository, or
 ## License and citation
 If you find our codes useful in your work, please cite us:
 ```bash
-citation bibtex
+@article{hense2025digital,
+  title={Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
+  author={Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Froehling, Stefan and Otto, Sven and  Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and Müller, Klaus-Robert and Mock, Andreas},
+  journal={bioRxiv},
+  pages={2025--11},
+  year={2025},
+  publisher={Cold Spring Harbor Laboratory}
+}
 ```
 
 :copyright: This code is provided under CC BY-NC-ND 4.0. 
