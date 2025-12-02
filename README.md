@@ -9,7 +9,7 @@ Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck
   <b>Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer</b>.
   <br><em>Julius Hense*, Mina Jamshidi Idaji*, Laure Ciernik, Jonas Dippel,
 Fatma Ersan, Maximilian Knebel, Ada Pusztai, Andrea Sendelhofert,
-Oliver Buchstab, Stefan Fr¨ohling, Sven Otto, Jochen Hess, Paris Liokatis,
+Oliver Buchstab, Stefan Fröhling, Sven Otto, Jochen Hess, Paris Liokatis,
 Frederick Klauschen, Klaus-Robert Müller, Andreas Mock </em></br>
 * Equal contribution
 
