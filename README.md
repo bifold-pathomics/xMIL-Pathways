@@ -1,12 +1,6 @@
 Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer
 ==========
 
-# TODO
-- [ ] check all the referenced links work
-- [ ] the `pip_requirement.txt` should be updated with the versions
-- [ ] visualization tools
-
-
 ![version](https://img.shields.io/badge/version-0.1-blue)
 ![Python](https://img.shields.io/badge/Python-3.9-green)
 
@@ -24,7 +18,14 @@ Frederick Klauschen, Klaus-Robert Müller, Andreas Mock </em></br>
 </summary>
 
 ```bash
-citation bibtex
+@article {Hense2025.11.24.689710,
+	author = {Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Fr{\"o}hling, Stefan and Otto, Sven and Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and M{\"u}ller, Klaus-Robert and Mock, Andreas},
+	title = {Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
+	year = {2025},
+	doi = {10.1101/2025.11.24.689710},
+	publisher = {Cold Spring Harbor Laboratory},
+	journal = {bioRxiv}
+}
 ```
 
 </details>
@@ -65,7 +66,14 @@ If you face issues using our codes, you can open an issue in this repository, or
 ## License and citation
 If you find our codes useful in your work, please cite us:
 ```bash
-citation bibtex
+@article {Hense2025.11.24.689710,
+	author = {Hense, Julius and Idaji, Mina Jamshidi and Ciernik, Laure and Dippel, Jonas and Ersan, Fatma and Knebel, Maximilian and Pusztai, Ada and Sendelhofert, Andrea and Buchstab, Oliver and Fr{\"o}hling, Stefan and Otto, Sven and Hess, Jochen and Liokatis, Paris and Klauschen, Frederick and M{\"u}ller, Klaus-Robert and Mock, Andreas},
+	title = {Digital Spatial Pathway Mapping Reveals Prognostic Tumor States in Head and Neck Cancer},
+	year = {2025},
+	doi = {10.1101/2025.11.24.689710},
+	publisher = {Cold Spring Harbor Laboratory},
+	journal = {bioRxiv}
+}
 ```
 
 :copyright: This code is provided under CC BY-NC-ND 4.0. 
