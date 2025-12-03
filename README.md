@@ -15,6 +15,8 @@ Frederick Klauschen, Klaus-Robert Müller, Andreas Mock </em></br>
 
 :octocat: https://github.com/bifold-pathomics/xMIL-Pathways
 
+📄 Preprint: https://www.biorxiv.org/content/10.1101/2025.11.24.689710v1.abstract
+
 </summary>
 
 ```bash
