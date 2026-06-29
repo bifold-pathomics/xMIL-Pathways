@@ -1,7 +1,7 @@
 ---
 title: "Patient Stratification in LMU cohort- Hense, Jamshidi Idaji et al."
 author: "Andreas Mock"
-date: "2025-05-07"
+date: "2026-06-29"
 output: md_document
 ---
 
@@ -40,7 +40,7 @@ pred <- read_tsv("lmu_predictions_pseudo.tsv")
 clin <- read_tsv("lmu_clinical_data_pseudo.tsv")
 ```
 
-# Supplemental Table 1 - Clinicopathological parameters of LMU cohort - categorial parameters
+# Table S1 - Clinicopathological parameters of LMU cohort - categorial parameters
 
 Helper function to generate Latex table
 
@@ -103,7 +103,7 @@ clin_to_latex <- function(df,
 clin_to_latex(clin, exclude = c(1,2,3,14:17))
 ```
 
-# Suppl. Table 2 - Clinicopathological parameters of LMU cohort - continous parameters
+# Table S2 - Clinicopathological parameters of LMU cohort - continous parameters
 
 Helper function
 
@@ -221,7 +221,7 @@ ht <- Heatmap(t(mat),
         column_km = 2,
         row_km=2,
         name="TAPAS",
-       column_title = c("pathway quiescent","oncogenic growth"),
+       column_title = c("metabolic persistence","oncogenic growth"),
         row_title=c("",""), show_row_dend = FALSE,
         col = colorRamp2(c(0, 0.5, 1), c("#0072B2", "white", "#D55E00")),
         top_annotation = column_annotation)
@@ -240,15 +240,15 @@ ht_drawn <- draw(ht)
 # extract clustering assignments and summarize on patient level
 column_order_list <- ComplexHeatmap:::column_order(ht_drawn) 
 cluster1_slides <- rownames(mat)[column_order_list$`1`]
-pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "pathway quiescent", "oncogenic growth")
+pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
 patient_clusters = table(pred$case_id, pred$cluster) / 14
 
 # assign patients to cluster group by most abundant cluster
-clin$cluster <- if_else(patient_clusters[,1]>patient_clusters[,2], "pathway quiescent", "oncogenic growth")
+clin$cluster <- if_else(patient_clusters[,1]>patient_clusters[,2], "metabolic persistence", "oncogenic growth")
 
 # create dataframe for waterfall plot
 patients_cluster_df <- as_tibble(as.data.frame(patient_clusters))
-patients_cluster_df$Freq[patients_cluster_df$Var2=="pathway quiescent"] <- patients_cluster_df$Freq[patients_cluster_df$Var2=="pathway quiescent"] * (-1)
+patients_cluster_df$Freq[patients_cluster_df$Var2=="metabolic persistence"] <- patients_cluster_df$Freq[patients_cluster_df$Var2=="metabolic persistence"] * (-1)
 colnames(patients_cluster_df) <- c("patient","cluster","Freq")
 
 # Plot
@@ -264,7 +264,7 @@ patients_cluster_df %>%
   mutate(patient = factor(patient, levels = c(og_order, setdiff(unique(patient), og_order)))) %>%
   ggplot(aes(x = patient, y = Freq, fill = cluster)) +
   geom_col(position = "identity") +
-  scale_fill_manual(values = c("pathway quiescent" = "#0072B2",
+  scale_fill_manual(values = c("metabolic persistence" = "#0072B2",
                                "oncogenic growth" = "#D55E00")) +
   labs(x = "patients", y = "Number of slides per resection specimen") +
   theme_classic() +
@@ -278,7 +278,7 @@ patients_cluster_df %>%
 # extract clustering assignments and summarize on patient level
 column_order_list <- ComplexHeatmap:::column_order(ht_drawn) 
 cluster1_slides <- rownames(mat)[column_order_list$`1`]
-pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "pathway quiescent", "oncogenic growth")
+pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
 
 
 pred %>%
@@ -320,7 +320,7 @@ p <- ggsurvplot(
   xlab = "Time (months)",        # X-axis label
   ylab = "Disease recurrence after surgery", # Y-axis label
   legend.title = "",
-  legend.labs = c("OG", "PQ"),
+  legend.labs = c("OG", "MP"),
   xlim = c(0,12*3),
   break.time.by = 3,
   risk.table.y.text.col = TRUE,
@@ -410,7 +410,7 @@ clin$pN <- relevel(as.factor(clin$pN), ref = "N1")
 clin$Pn <- relevel(as.factor(clin$Pn), ref = "no")
 clin$`bone invasion` <- relevel(as.factor(clin$`bone invasion`), ref = "no")
 clin$cluster <-  as.factor(clin$cluster)
-levels(clin$cluster) <- c("OG","PQ")
+levels(clin$cluster) <- c("OG","MP")
 clin$cluster <-  relevel(clin$cluster, ref = "OG")
 
 uni_results <- cox_univariate_all(
