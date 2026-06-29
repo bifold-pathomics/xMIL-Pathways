@@ -29,7 +29,7 @@ per pathway ‘clin’ = clinical metadata
     pred <- read_tsv("lmu_predictions_pseudo.tsv")
 
     ## Rows: 14924 Columns: 7
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (3): slide_id, pathway, location
     ## dbl (4): case_id, num_tumor_patches, TAPAS, slide_level_prediction_score
@@ -40,7 +40,7 @@ per pathway ‘clin’ = clinical metadata
     clin <- read_tsv("lmu_clinical_data_pseudo.tsv")
 
     ## Rows: 112 Columns: 17
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (11): sex (male), radio(-chemotherapy) (yes), location, pT, pN, grading,...
     ## dbl  (6): case_id, age, disease recurrence, time from op to recurrence or la...
@@ -291,7 +291,7 @@ predictive LRP-positive fractions are representative for the slide.
             top_annotation = column_annotation)
 
 
-    png("plots/figure3a.png", width = 7, height = 3, units = "in", res=600)
+    pdf("plots/figure3a.pdf", width = 7, height = 3)
     set.seed(1)
     ht_drawn <- draw(ht)
     dev.off()
@@ -337,7 +337,7 @@ predictive LRP-positive fractions are representative for the slide.
 
 ![](patient_stratification_lmu_cohort_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
-    ggsave("plots/figure3b.png", height = 3, width = 5, dpi=600)
+    ggsave("plots/figure3b.pdf", height = 3, width = 5)
 
 # Figure 3c - Clusters ~ P vs LMET
 
@@ -360,7 +360,7 @@ predictive LRP-positive fractions are representative for the slide.
 
 ![](patient_stratification_lmu_cohort_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
-    ggsave("plots/figure3c.png",height = 3, width = 2.5, dpi=600)
+    ggsave("plots/figure3c.pdf",height = 3, width = 2.5)
 
     temp <- pred %>%
       select(slide_id, location, cluster) %>%

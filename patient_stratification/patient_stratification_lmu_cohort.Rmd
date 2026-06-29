@@ -228,7 +228,7 @@ ht <- Heatmap(t(mat),
         top_annotation = column_annotation)
 
 
-png("plots/figure3a.png", width = 7, height = 3, units = "in", res=600)
+pdf("plots/figure3a.pdf", width = 7, height = 3)
 set.seed(1)
 ht_drawn <- draw(ht)
 dev.off()
@@ -271,7 +271,7 @@ patients_cluster_df %>%
   theme_classic() +
   theme(axis.text.x = element_blank(),
         axis.ticks.x = element_blank()) 
-ggsave("plots/figure3b.png", height = 3, width = 5, dpi=600)
+ggsave("plots/figure3b.pdf", height = 3, width = 5)
 ```
 # Figure 3c - Clusters ~ P vs LMET
 
@@ -293,7 +293,7 @@ pred %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ylab("fraction")
 
-ggsave("plots/figure3c.png",height = 3, width = 2.5, dpi=600)
+ggsave("plots/figure3c.pdf",height = 3, width = 2.5)
 
 temp <- pred %>%
   select(slide_id, location, cluster) %>%

@@ -1,0 +1,572 @@
+# Load packages
+
+    suppressPackageStartupMessages({
+    library(readxl)
+    library(tidyverse)
+    library(ComplexHeatmap)
+    library(circlize)
+    library(survival)
+    library(survminer)
+    library(dplyr)
+    library(purrr)
+    library(broom)
+    library(survival)
+    library(forcats)
+    library(rlang)
+    library(ggforestplot)
+    library(paletteer)
+    library(gtsummary)
+    library(kableExtra)
+    library(ggsignif)
+    library(xtable)
+    library(readr)
+    library(tidyr)
+    library(grid)
+    library(data.table)
+    library(stringr)
+    library(limma)
+    library(STRINGdb)
+    library(igraph)
+    library(ggraph)
+    library(patchwork)
+    })
+
+# Figure S8
+
+Identify states in TCGA cohort
+
+    input_file <- "lrp_preds_tcga.csv"
+    set.seed(1)
+
+    # -----------------------------
+    # Auto-detect delimiter
+    # -----------------------------
+    first_line <- readLines(input_file, n = 1)
+
+    if (grepl("\t", first_line)) {
+      message("Detected tab-separated file.")
+      df <- read_tsv(input_file, show_col_types = FALSE)
+    } else {
+      message("Detected comma-separated file.")
+      df <- read_csv(input_file, show_col_types = FALSE)
+    }
+
+    ## Detected comma-separated file.
+
+    # -----------------------------
+    # Check required columns
+    # -----------------------------
+    required_cols <- c("case_id", "pathway", "lrp_pos_fraction")
+    missing_cols <- setdiff(required_cols, colnames(df))
+
+    if (length(missing_cols) > 0) {
+      stop("Missing required columns: ", paste(missing_cols, collapse = ", "))
+    }
+
+    # -----------------------------
+    # Keep only needed columns
+    # If there are duplicate case_id/pathway combinations,
+    # average lrp_pos_fraction
+    # -----------------------------
+    df_heat <- df %>%
+      select(case_id, pathway, lrp_pos_fraction) %>%
+      group_by(case_id, pathway) %>%
+      summarise(lrp_pos_fraction = mean(lrp_pos_fraction, na.rm = TRUE), .groups = "drop")
+
+    # -----------------------------
+    # Convert to matrix:
+    # rows = pathway
+    # columns = case_id
+    # values = lrp_pos_fraction
+    # -----------------------------
+    mat_df <- df_heat %>%
+      pivot_wider(
+        names_from = case_id,
+        values_from = lrp_pos_fraction
+      )
+
+    # Store pathway names and make numeric matrix
+    pathway_names <- mat_df$pathway
+
+    mat <- mat_df %>%
+      select(-pathway) %>%
+      as.matrix()
+
+    rownames(mat) <- pathway_names
+    mode(mat) <- "numeric"
+
+    # -----------------------------
+    # Color function
+    # Adjust if you want a different palette/range
+    # -----------------------------
+    col_fun <- colorRamp2(
+      c(0, 0.5, 1),
+      c("#2166AC", "white", "#B2182B")
+    )
+
+    # -----------------------------
+    # Create heatmap
+    # -----------------------------
+    set.seed(1)
+    ht <- Heatmap(
+
+      mat,
+
+      name = "lrp_pos_fraction",
+
+      col = col_fun,
+
+      na_col = "grey90",
+
+      cluster_rows = TRUE,
+
+      cluster_columns = TRUE,
+
+      column_km = 2,               # k-means clustering of columns into 2 groups
+
+      show_row_names = TRUE,
+
+      show_column_names = FALSE,
+
+      row_names_side = "left",
+
+      column_title = "case_id",
+
+      row_title = "pathway",
+
+      heatmap_legend_param = list(
+
+        title = "lrp_pos_fraction",
+
+        at = c(0, 0.5, 1)
+
+      )
+
+    )
+
+    # draw heatmap and store result
+    set.seed(1)
+    ht_drawn <- draw(ht)
+
+![](tcga_network_analysis_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+
+    # get column order split by k-means clusters
+    col_order_list <- column_order(ht_drawn)
+
+    # convert to cluster labels
+    case_ids <- colnames(mat)
+
+    cluster_df <- do.call(rbind, lapply(seq_along(col_order_list), function(i) {
+      data.frame(
+        case_id = case_ids[col_order_list[[i]]],
+        km_cluster = i
+      )
+    }))
+
+    # order nicely
+    cluster_df <- cluster_df[match(case_ids, cluster_df$case_id), ]
+
+Differential expression analysis in TCGA
+
+    # ------------------------------------------------------------
+    # INPUTS
+    # ------------------------------------------------------------
+    expr_file <- "tcga_hnsc_norm_expression_mat_filtered.csv"
+
+    # cluster_df must already exist in environment
+    # expected columns:
+    #   case_id
+    #   km_cluster
+    stopifnot(exists("cluster_df"))
+    stopifnot(all(c("case_id", "km_cluster") %in% colnames(cluster_df)))
+
+    # ------------------------------------------------------------
+    # 1) Prepare cluster labels for matching to RNA samples
+    # ------------------------------------------------------------
+    cluster_df2 <- cluster_df %>%
+      mutate(
+        sample_barcode_path = case_id,
+        tcga_short = substr(case_id, 1, 15),   # e.g. TCGA-BA-4078-01
+        km_cluster = factor(km_cluster)
+      )
+
+    # If multiple pathology-derived entries map to the same tcga_short,
+    # reduce to one label by majority vote
+    cluster_short <- cluster_df2 %>%
+      group_by(tcga_short) %>%
+      summarise(
+        km_cluster = names(sort(table(km_cluster), decreasing = TRUE))[1],
+        n_path_samples = n(),
+        .groups = "drop"
+      ) %>%
+      mutate(km_cluster = factor(km_cluster, levels = c("1", "2")))
+
+    # ------------------------------------------------------------
+    # 2) Read TPM matrix
+    # File uses semicolon separator and decimal comma
+    # first column = gene symbol
+    # remaining columns = samples
+    # ------------------------------------------------------------
+    expr_dt <- fread(
+      expr_file,
+      sep = ";",
+      dec = ",",
+      header = TRUE,
+      data.table = FALSE,
+      check.names = FALSE
+    )
+
+    # rename first column to gene if needed
+    colnames(expr_dt)[1] <- "gene"
+
+    # remove empty rows or duplicated gene names carefully
+    expr_dt <- expr_dt %>%
+      filter(!is.na(gene), gene != "")
+
+    # If duplicated genes exist, keep the row with highest mean TPM
+    if (anyDuplicated(expr_dt$gene) > 0) {
+      expr_dt <- expr_dt %>%
+        mutate(mean_expr_tmp = rowMeans(across(-gene), na.rm = TRUE)) %>%
+        arrange(desc(mean_expr_tmp)) %>%
+        distinct(gene, .keep_all = TRUE) %>%
+        select(-mean_expr_tmp)
+    }
+
+    # expression matrix
+    expr_mat <- as.matrix(expr_dt[, -1, drop = FALSE])
+    rownames(expr_mat) <- expr_dt$gene
+    mode(expr_mat) <- "numeric"
+
+    # ------------------------------------------------------------
+    # 3) Match RNA columns to cluster labels
+    # RNA columns look like:
+    #   TCGA-BA-4078-01A-11R-A24Z-07
+    # common key with cluster_df:
+    #   first 15 chars => TCGA-BA-4078-01
+    # ------------------------------------------------------------
+    rna_annot <- tibble(
+      rna_col = colnames(expr_mat),
+      tcga_short = substr(colnames(expr_mat), 1, 15)
+    ) %>%
+      left_join(cluster_short, by = "tcga_short")
+
+    # keep only samples with cluster labels
+    rna_annot_use <- rna_annot %>%
+      filter(!is.na(km_cluster))
+
+    cat("RNA samples in matrix:", ncol(expr_mat), "\n")
+
+    ## RNA samples in matrix: 548
+
+    cat("RNA samples matched to clusters:", nrow(rna_annot_use), "\n")
+
+    ## RNA samples matched to clusters: 332
+
+    print(table(rna_annot_use$km_cluster, useNA = "ifany"))
+
+    ## 
+    ##   1   2 
+    ## 142 190
+
+    # subset matrix to matched samples only
+    expr_use <- expr_mat[, rna_annot_use$rna_col, drop = FALSE]
+
+    # ------------------------------------------------------------
+    # 4) Log-transform TPM
+    # limma on log2(TPM + 1)
+    # ------------------------------------------------------------
+    expr_log2 <- log2(expr_use + 1)
+
+    # Optional filtering:
+    # keep genes expressed above 1 TPM in at least 20% of samples
+    keep <- rowSums(expr_use > 1) >= ceiling(0.20 * ncol(expr_use))
+    expr_log2_filt <- expr_log2[keep, , drop = FALSE]
+
+    cat("Genes before filtering:", nrow(expr_log2), "\n")
+
+    ## Genes before filtering: 4645
+
+    cat("Genes after filtering:", nrow(expr_log2_filt), "\n")
+
+    ## Genes after filtering: 4629
+
+    # ------------------------------------------------------------
+    # 5) Differential expression with limma
+    # Compare Cluster 2 vs Cluster 1
+    # ------------------------------------------------------------
+    group <- factor(rna_annot_use$km_cluster, levels = c("1", "2"))
+    design <- model.matrix(~ group)
+    colnames(design) <- c("Intercept", "Cluster2_vs_1")
+
+    fit <- lmFit(expr_log2_filt, design)
+    fit <- eBayes(fit)
+
+    de_res <- topTable(
+      fit,
+      coef = "Cluster2_vs_1",
+      number = Inf,
+      sort.by = "P"
+    ) %>%
+      rownames_to_column("gene") %>%
+      as_tibble()
+
+    # add direction labels
+    de_res <- de_res %>%
+      mutate(
+        regulation = case_when(
+          adj.P.Val < 0.05 & logFC > 0 ~ "Up in Cluster 2",
+          adj.P.Val < 0.05 & logFC < 0 ~ "Up in Cluster 1",
+          TRUE ~ "NS"
+        )
+      )
+
+    # quick summary
+    cat("\nDE summary:\n")
+
+    ## 
+    ## DE summary:
+
+    print(table(de_res$regulation))
+
+    ## 
+    ##              NS Up in Cluster 1 Up in Cluster 2 
+    ##            2626            1346             657
+
+    top_up_cluster2 <- de_res %>%
+      filter(adj.P.Val < 0.05, logFC > 1) %>%
+      arrange(adj.P.Val)
+
+    top_up_cluster1 <- de_res %>%
+      filter(adj.P.Val < 0.05, logFC < -1) %>%
+      arrange(adj.P.Val)
+
+STRING analysis
+
+    # ------------------------------------------------------------
+    # INPUTS
+    # ------------------------------------------------------------
+    # expected objects:
+    #   top_up_cluster1
+    #   top_up_cluster2
+    # each with columns:
+    #   gene, logFC, adj.P.Val
+
+    stopifnot(exists("top_up_cluster1"))
+    stopifnot(exists("top_up_cluster2"))
+    stopifnot(all(c("gene", "logFC", "adj.P.Val") %in% colnames(top_up_cluster1)))
+    stopifnot(all(c("gene", "logFC", "adj.P.Val") %in% colnames(top_up_cluster2)))
+
+    # ------------------------------------------------------------
+    # SETTINGS
+    # ------------------------------------------------------------
+    top_n_genes <- 40
+    string_score_threshold <- 400
+    n_labels <- 15
+    min_component_size <- 3
+
+    # ------------------------------------------------------------
+    # INITIALIZE STRINGdb ONCE
+    # ------------------------------------------------------------
+    string_db <- STRINGdb$new(
+      version = "11.5",
+      species = 9606,
+      score_threshold = string_score_threshold,
+      input_directory = ""
+    )
+
+    aliases <- string_db$get_aliases()
+
+    # ------------------------------------------------------------
+    # HELPER FUNCTION: build graph from DEG table
+    # ------------------------------------------------------------
+    build_string_graph <- function(de_table, aliases, string_db,
+                                   top_n_genes = 40,
+                                   min_component_size = 3) {
+
+      genes_df <- de_table %>%
+        arrange(adj.P.Val) %>%
+        slice_head(n = top_n_genes) %>%
+        distinct(gene, .keep_all = TRUE) %>%
+        dplyr::select(gene, logFC, adj.P.Val)
+
+      genes_df <- data.frame(
+        gene = as.character(genes_df$gene),
+        logFC = as.numeric(genes_df$logFC),
+        adj.P.Val = as.numeric(genes_df$adj.P.Val),
+        stringsAsFactors = FALSE
+      )
+
+      genes_df <- genes_df[!is.na(genes_df$gene), , drop = FALSE]
+      genes_df <- genes_df[genes_df$gene != "", , drop = FALSE]
+      genes_df <- genes_df[!duplicated(genes_df$gene), , drop = FALSE]
+      rownames(genes_df) <- NULL
+
+      mapped <- genes_df %>%
+        inner_join(aliases, by = c("gene" = "alias")) %>%
+        distinct(gene, .keep_all = TRUE)
+
+      if (nrow(mapped) < 2) {
+        stop("Too few genes could be mapped to STRING IDs.")
+      }
+
+      hits <- unique(mapped$STRING_id)
+
+      edges_raw <- string_db$get_interactions(hits)
+
+      edges_filt <- edges_raw %>%
+        filter(from %in% hits, to %in% hits)
+
+      if (nrow(edges_filt) == 0) {
+        stop("No STRING interactions found for this gene set.")
+      }
+
+      nodes <- mapped %>%
+        transmute(
+          STRING_id,
+          gene,
+          logFC,
+          adj.P.Val,
+          neglog10FDR = -log10(adj.P.Val + 1e-300)
+        ) %>%
+        distinct(STRING_id, .keep_all = TRUE)
+
+      g <- graph_from_data_frame(
+        d = edges_filt %>% select(from, to),
+        directed = FALSE,
+        vertices = nodes %>% rename(name = STRING_id)
+      )
+
+      # remove isolated nodes
+      g <- delete_vertices(g, degree(g) == 0)
+
+      if (vcount(g) == 0) {
+        stop("Graph contains no connected nodes after removing isolates.")
+      }
+
+      # remove tiny connected components
+      comp <- components(g)
+      keep_comp_ids <- which(comp$csize >= min_component_size)
+      g <- induced_subgraph(g, vids = V(g)[comp$membership %in% keep_comp_ids])
+
+      if (vcount(g) == 0) {
+        stop("No graph left after removing small components.")
+      }
+
+      # metrics
+      V(g)$degree <- degree(g)
+      V(g)$betweenness <- betweenness(g, normalized = TRUE)
+
+      return(g)
+    }
+
+    # ------------------------------------------------------------
+    # HELPER FUNCTION: choose genes to label
+    # ------------------------------------------------------------
+    get_label_genes <- function(g, n_labels = 15) {
+      node_df <- as_data_frame(g, what = "vertices")
+
+      node_df %>%
+        arrange(desc(neglog10FDR), desc(degree)) %>%
+        slice_head(n = n_labels) %>%
+        pull(gene)
+    }
+
+    # ------------------------------------------------------------
+    # HELPER FUNCTION: plot graph
+    # ------------------------------------------------------------
+    plot_string_graph <- function(g, title_text, high_color, n_labels = 15) {
+      set.seed(1)
+      label_genes <- get_label_genes(g, n_labels = n_labels)
+
+      ggraph(g, layout = "fr") +
+        geom_edge_link(alpha = 0.25, colour = "grey70") +
+        geom_node_point(
+          aes(size = degree, color = neglog10FDR)
+        ) +
+        geom_node_text(
+          aes(label = ifelse(gene %in% label_genes, gene, "")),
+          repel = TRUE,
+          size = 3
+        ) +
+        scale_size_continuous(name = "Degree") +
+        scale_color_gradient(
+          low = "grey85",
+          high = high_color,
+          name = "-log10(FDR)"
+        ) +
+        theme_void() +
+        ggtitle(title_text) +
+        theme(
+          plot.title = element_text(size = 13, face = "bold", hjust = 0.5),
+          legend.title = element_text(size = 10),
+          legend.text = element_text(size = 9)
+        )
+    }
+
+    # ------------------------------------------------------------
+    # BUILD BOTH NETWORKS
+    # ------------------------------------------------------------
+    g1 <- build_string_graph(
+      de_table = top_up_cluster1,
+      aliases = aliases,
+      string_db = string_db,
+      top_n_genes = top_n_genes,
+      min_component_size = min_component_size
+    )
+
+    g2 <- build_string_graph(
+      de_table = top_up_cluster2,
+      aliases = aliases,
+      string_db = string_db,
+      top_n_genes = top_n_genes,
+      min_component_size = min_component_size
+    )
+
+    cat("Cluster 1 network: ", vcount(g1), "nodes, ", ecount(g1), "edges\n", sep = "")
+
+    ## Cluster 1 network: 26nodes, 220edges
+
+    cat("Cluster 2 network: ", vcount(g2), "nodes, ", ecount(g2), "edges\n", sep = "")
+
+    ## Cluster 2 network: 32nodes, 118edges
+
+    # ------------------------------------------------------------
+    # MAKE PLOTS
+    # ------------------------------------------------------------
+    p1 <- plot_string_graph(
+      g = g1,
+      title_text = "Metabolic persistence",
+      high_color = "#2166AC",
+      n_labels = n_labels
+    )
+
+    p2 <- plot_string_graph(
+      g = g2,
+      title_text = "Oncogenic growth",
+      high_color = "#B2182B",
+      n_labels = n_labels
+    )
+
+    # ------------------------------------------------------------
+    # COMBINE INTO PAIRED PANEL
+    # collect legends for cleaner figure
+    # ------------------------------------------------------------
+    paired_panel <- (p1 | p2) +
+      plot_annotation(
+        title = "",
+        theme = theme(
+          plot.title = element_text(size = 15, face = "bold", hjust = 0.5)
+        )
+      ) &
+      theme(legend.position = "right")
+
+    print(paired_panel)
+
+![](tcga_network_analysis_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+    ggsave(
+      filename = "plots/figureS8.pdf",
+      plot = paired_panel,
+      width = 9,
+      height = 4
+    )
