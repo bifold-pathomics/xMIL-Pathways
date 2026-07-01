@@ -35,7 +35,7 @@
 
 Identify states in TCGA cohort
 
-    input_file <- "lrp_preds_tcga.csv"
+    input_file <- "data/tcga_tapas.csv"
     set.seed(1)
 
     # -----------------------------
@@ -171,7 +171,7 @@ Differential expression analysis in TCGA
     # ------------------------------------------------------------
     # INPUTS
     # ------------------------------------------------------------
-    expr_file <- "tcga_hnsc_norm_expression_mat_filtered.csv"
+    expr_file <- "data/tcga_norm_expression_filtered.csv"
 
     # cluster_df must already exist in environment
     # expected columns:

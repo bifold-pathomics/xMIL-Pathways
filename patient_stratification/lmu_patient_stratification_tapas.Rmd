@@ -36,8 +36,8 @@ library(xtable)
 'clin' = clinical metadata
 
 ```{r}
-pred <- read_tsv("lmu_predictions_pseudo.tsv")
-clin <- read_tsv("lmu_clinical_data_pseudo.tsv")
+pred <- read_tsv("data/lmu_tapas.tsv")
+clin <- read_tsv("data/lmu_clinical_data.tsv")
 ```
 
 # Table S1 - Clinicopathological parameters of LMU cohort - categorial parameters

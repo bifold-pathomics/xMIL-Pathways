@@ -26,10 +26,10 @@
 ‘pred’ = dataframe summarizing the LRP positive fractions per slide and
 per pathway ‘clin’ = clinical metadata
 
-    pred <- read_tsv("lmu_predictions_pseudo.tsv")
+    pred <- read_tsv("data/lmu_tapas.tsv")
 
     ## Rows: 14924 Columns: 7
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (3): slide_id, pathway, location
     ## dbl (4): case_id, num_tumor_patches, TAPAS, slide_level_prediction_score
@@ -37,10 +37,10 @@ per pathway ‘clin’ = clinical metadata
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
-    clin <- read_tsv("lmu_clinical_data_pseudo.tsv")
+    clin <- read_tsv("data/lmu_clinical_data.tsv")
 
     ## Rows: 112 Columns: 17
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (11): sex (male), radio(-chemotherapy) (yes), location, pT, pN, grading,...
     ## dbl  (6): case_id, age, disease recurrence, time from op to recurrence or la...
@@ -335,7 +335,7 @@ predictive LRP-positive fractions are representative for the slide.
       theme(axis.text.x = element_blank(),
             axis.ticks.x = element_blank()) 
 
-![](patient_stratification_lmu_cohort_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
     ggsave("plots/figure3b.pdf", height = 3, width = 5)
 
@@ -358,7 +358,7 @@ predictive LRP-positive fractions are representative for the slide.
       theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
       ylab("fraction")
 
-![](patient_stratification_lmu_cohort_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
     ggsave("plots/figure3c.pdf",height = 3, width = 2.5)
 
@@ -569,6 +569,6 @@ predictive LRP-positive fractions are representative for the slide.
       ylab("TAPAS") +
       scale_fill_manual(values = c("#CCCCCC","#117733")) 
 
-![](patient_stratification_lmu_cohort_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
     ggsave("plots/figure3f.pdf", height = 3, width = 12)
