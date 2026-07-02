@@ -544,3 +544,10 @@ pred %>%
   scale_fill_manual(values = c("#CCCCCC","#117733")) 
 ggsave("plots/figure3f.pdf", height = 3, width = 12)
 ```
+
+# Session Info
+```{r session-info}
+
+sessionInfo()
+
+```

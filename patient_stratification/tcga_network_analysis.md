@@ -570,3 +570,74 @@ STRING analysis
       width = 9,
       height = 4
     )
+
+# Session Info
+
+    sessionInfo()
+
+    ## R version 4.5.1 (2025-06-13)
+    ## Platform: aarch64-apple-darwin20
+    ## Running under: macOS Tahoe 26.5.1
+    ## 
+    ## Matrix products: default
+    ## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+    ## 
+    ## locale:
+    ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## 
+    ## time zone: Europe/Berlin
+    ## tzcode source: internal
+    ## 
+    ## attached base packages:
+    ## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+    ## [8] base     
+    ## 
+    ## other attached packages:
+    ##  [1] patchwork_1.3.1       ggraph_2.2.2          igraph_2.1.4         
+    ##  [4] STRINGdb_2.20.0       limma_3.64.3          data.table_1.17.8    
+    ##  [7] xtable_1.8-4          ggsignif_0.6.4        kableExtra_1.4.0     
+    ## [10] gtsummary_2.4.0       paletteer_1.6.0       ggforestplot_0.1.0   
+    ## [13] rlang_1.1.6           broom_1.0.9           survminer_0.5.0      
+    ## [16] ggpubr_0.6.1          survival_3.8-3        circlize_0.4.16      
+    ## [19] ComplexHeatmap_2.24.1 lubridate_1.9.4       forcats_1.0.0        
+    ## [22] stringr_1.5.1         dplyr_1.1.4           purrr_1.1.0          
+    ## [25] readr_2.1.5           tidyr_1.3.1           tibble_3.3.0         
+    ## [28] ggplot2_3.5.2         tidyverse_2.0.0       readxl_1.4.5         
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##   [1] RColorBrewer_1.1-3  rstudioapi_0.17.1   shape_1.4.6.1      
+    ##   [4] magrittr_2.0.3      farver_2.1.2        rmarkdown_2.29     
+    ##   [7] ragg_1.4.0          GlobalOptions_0.1.2 vctrs_0.6.5        
+    ##  [10] memoise_2.0.1       rstatix_0.7.2       htmltools_0.5.8.1  
+    ##  [13] plotrix_3.8-14      cellranger_1.1.0    Formula_1.2-5      
+    ##  [16] KernSmooth_2.23-26  gsubfn_0.7          plyr_1.8.9         
+    ##  [19] zoo_1.8-14          cachem_1.1.0        lifecycle_1.0.4    
+    ##  [22] iterators_1.0.14    pkgconfig_2.0.3     Matrix_1.7-3       
+    ##  [25] R6_2.6.1            fastmap_1.2.0       clue_0.3-66        
+    ##  [28] digest_0.6.37       colorspace_2.1-1    rematch2_2.1.2     
+    ##  [31] S4Vectors_0.46.0    chron_2.3-62        textshaping_1.0.1  
+    ##  [34] RSQLite_2.4.3       labeling_0.4.3      km.ci_0.5-6        
+    ##  [37] timechange_0.3.0    httr_1.4.7          polyclip_1.10-7    
+    ##  [40] abind_1.4-8         compiler_4.5.1      bit64_4.6.0-1      
+    ##  [43] withr_3.0.2         doParallel_1.0.17   backports_1.5.0    
+    ##  [46] carData_3.0-5       viridis_0.6.5       DBI_1.2.3          
+    ##  [49] ggforce_0.5.0       gplots_3.2.0        MASS_7.3-65        
+    ##  [52] rjson_0.2.23        gtools_3.9.5        caTools_1.18.3     
+    ##  [55] tools_4.5.1         glue_1.8.0          cluster_2.1.8.1    
+    ##  [58] generics_0.1.4      gtable_0.3.6        tzdb_0.5.0         
+    ##  [61] KMsurv_0.1-6        hms_1.1.3           tidygraph_1.3.1    
+    ##  [64] xml2_1.4.0          car_3.1-3           BiocGenerics_0.54.0
+    ##  [67] ggrepel_0.9.6       foreach_1.5.2       pillar_1.11.0      
+    ##  [70] vroom_1.6.5         splines_4.5.1       tweenr_2.0.3       
+    ##  [73] lattice_0.22-7      bit_4.6.0           tidyselect_1.2.1   
+    ##  [76] knitr_1.50          gridExtra_2.3       IRanges_2.42.0     
+    ##  [79] sqldf_0.4-12        svglite_2.2.1       stats4_4.5.1       
+    ##  [82] xfun_0.52           graphlayouts_1.2.2  statmod_1.5.0      
+    ##  [85] matrixStats_1.5.0   proto_1.0.0         stringi_1.8.7      
+    ##  [88] lazyeval_0.2.2      yaml_2.3.10         evaluate_1.0.4     
+    ##  [91] codetools_0.2-20    hash_2.2.6.4        cli_3.6.5          
+    ##  [94] systemfonts_1.2.3   survMisc_0.5.6      Rcpp_1.1.0         
+    ##  [97] png_0.1-8           parallel_4.5.1      blob_1.2.4         
+    ## [100] bitops_1.0-9        viridisLite_0.4.2   scales_1.4.0       
+    ## [103] crayon_1.5.3        GetoptLong_1.0.5

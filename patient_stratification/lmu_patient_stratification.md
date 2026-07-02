@@ -621,3 +621,65 @@ predictive LRP-positive fractions are representative for the slide.
 ![](lmu_patient_stratification_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
     ggsave("plots/figure3f.pdf", height = 3, width = 12)
+
+# Session Info
+
+    sessionInfo()
+
+    ## R version 4.5.1 (2025-06-13)
+    ## Platform: aarch64-apple-darwin20
+    ## Running under: macOS Tahoe 26.5.1
+    ## 
+    ## Matrix products: default
+    ## BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+    ## 
+    ## locale:
+    ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## 
+    ## time zone: Europe/Berlin
+    ## tzcode source: internal
+    ## 
+    ## attached base packages:
+    ## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+    ## [8] base     
+    ## 
+    ## other attached packages:
+    ##  [1] xtable_1.8-4          ggsignif_0.6.4        kableExtra_1.4.0     
+    ##  [4] gtsummary_2.4.0       paletteer_1.6.0       ggforestplot_0.1.0   
+    ##  [7] rlang_1.1.6           broom_1.0.9           survminer_0.5.0      
+    ## [10] ggpubr_0.6.1          survival_3.8-3        circlize_0.4.16      
+    ## [13] ComplexHeatmap_2.24.1 lubridate_1.9.4       forcats_1.0.0        
+    ## [16] stringr_1.5.1         dplyr_1.1.4           purrr_1.1.0          
+    ## [19] readr_2.1.5           tidyr_1.3.1           tibble_3.3.0         
+    ## [22] ggplot2_3.5.2         tidyverse_2.0.0       readxl_1.4.5         
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] gridExtra_2.3       rematch2_2.1.2      magrittr_2.0.3     
+    ##  [4] clue_0.3-66         GetoptLong_1.0.5    matrixStats_1.5.0  
+    ##  [7] compiler_4.5.1      png_0.1-8           systemfonts_1.2.3  
+    ## [10] vctrs_0.6.5         pkgconfig_2.0.3     shape_1.4.6.1      
+    ## [13] crayon_1.5.3        fastmap_1.2.0       backports_1.5.0    
+    ## [16] labeling_0.4.3      KMsurv_0.1-6        rmarkdown_2.29     
+    ## [19] markdown_2.0        tzdb_0.5.0          ragg_1.4.0         
+    ## [22] bit_4.6.0           xfun_0.52           litedown_0.7       
+    ## [25] parallel_4.5.1      cluster_2.1.8.1     R6_2.6.1           
+    ## [28] stringi_1.8.7       RColorBrewer_1.1-3  car_3.1-3          
+    ## [31] cellranger_1.1.0    Rcpp_1.1.0          iterators_1.0.14   
+    ## [34] knitr_1.50          zoo_1.8-14          IRanges_2.42.0     
+    ## [37] Matrix_1.7-3        splines_4.5.1       timechange_0.3.0   
+    ## [40] tidyselect_1.2.1    rstudioapi_0.17.1   abind_1.4-8        
+    ## [43] yaml_2.3.10         ggtext_0.1.2        doParallel_1.0.17  
+    ## [46] codetools_0.2-20    lattice_0.22-7      withr_3.0.2        
+    ## [49] evaluate_1.0.4      xml2_1.4.0          survMisc_0.5.6     
+    ## [52] pillar_1.11.0       carData_3.0-5       foreach_1.5.2      
+    ## [55] stats4_4.5.1        generics_0.1.4      vroom_1.6.5        
+    ## [58] S4Vectors_0.46.0    hms_1.1.3           commonmark_2.0.0   
+    ## [61] scales_1.4.0        glue_1.8.0          lazyeval_0.2.2     
+    ## [64] tools_4.5.1         data.table_1.17.8   cowplot_1.2.0      
+    ## [67] colorspace_2.1-1    Formula_1.2-5       cli_3.6.5          
+    ## [70] km.ci_0.5-6         textshaping_1.0.1   viridisLite_0.4.2  
+    ## [73] svglite_2.2.1       gtable_0.3.6        rstatix_0.7.2      
+    ## [76] digest_0.6.37       BiocGenerics_0.54.0 rjson_0.2.23       
+    ## [79] farver_2.1.2        htmltools_0.5.8.1   lifecycle_1.0.4    
+    ## [82] GlobalOptions_0.1.2 gridtext_0.1.5      bit64_4.6.0-1
