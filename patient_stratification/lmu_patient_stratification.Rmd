@@ -259,7 +259,7 @@ ht_sl <- Heatmap(t(mat_sl),
         column_km = 2,
         row_km=2,
         name="Slide-level prediction score",
-       column_title = c("metabolic persistence","oncogenic growth"),
+       column_title = c("oncogenic growth","metabolic persistence"),
         row_title=c("",""), show_row_dend = FALSE,
         col = colorRamp2(c(0, 0.5, 1), c("#113644", "white", "#d55900")),
         top_annotation = column_annotation)
@@ -282,12 +282,12 @@ patient_clusters = table(pred$case_id, pred$cluster) / 14
 
 column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
 cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
-pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "metabolic persistence", "oncogenic growth")
+pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "oncogenic growth","metabolic persistence")
 patient_clusters_sl = table(pred$case_id, pred$cluster_sl) / 14
 
 # assign patients to cluster group by most abundant cluster
 clin$cluster <- if_else(patient_clusters[,1]>patient_clusters[,2], "metabolic persistence", "oncogenic growth")
-clin$cluster_sl <- if_else(patient_clusters_sl[,1]>patient_clusters_sl[,2], "metabolic persistence", "oncogenic growth")
+clin$cluster_sl <- if_else(patient_clusters_sl[,1]>patient_clusters_sl[,2], "oncogenic growth", "metabolic persistence")
 
 # create dataframe for waterfall plot
 patients_cluster_df <- as_tibble(as.data.frame(patient_clusters))
@@ -319,15 +319,6 @@ ggsave("plots/figure3b.pdf", height = 3, width = 5)
 # Figure 3c - Clusters ~ P vs LMET
 
 ```{r}
-# extract clustering assignments and summarize on patient level
-#column_order_list <- ComplexHeatmap:::column_order(ht_drawn) 
-#cluster1_slides <- rownames(mat)[column_order_list$`1`]
-#pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
-
-#column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
-#cluster1_slides_sl <- rownames(mat_sl)[column_order_list$`1`]
-#pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "metabolic persistence", "oncogenic growth")
-
 pred %>%
   select(slide_id, location, cluster) %>%
   distinct() %>%
@@ -376,40 +367,6 @@ p <- ggsurvplot(
 
 pdf("plots/figure3d.pdf", width = 5, height = 5)
 print(p,
-        surv.plot.height = 0.7,
-  risk.table.height = 0.3,
-  newpage = FALSE)    # important: use print()
-dev.off()
-```
-
-
-# Figure S9b - Kaplan-Meier curve - Univariante analysis for recurrence-free survival
-
-```{r}
-surv_obj_sl <- Surv(time = as.numeric(clin$`time from op to recurrence or last follow up(days)`) /  30.44, 
-                   event = as.numeric(clin$`disease recurrence`))
-
-km_fit_sl <- survfit(surv_obj ~ cluster_sl , clin)
-
-p_sl <- ggsurvplot(
-  km_fit_sl,
-  data = clin,
-  pval = TRUE,                 # Show p-value for log-rank test
-  conf.int = FALSE,             # Show confidence interval
-  risk.table = TRUE,           # Include risk table below the plot
-  palette = c("#d50000", "#0072B2"),  # Custom colors
-  xlab = "Time (months)",        # X-axis label
-  ylab = "Disease recurrence after surgery", # Y-axis label
-  legend.title = "",
-  legend.labs = c("OG", "MP"),
-  xlim = c(0,12*3),
-  break.time.by = 3,
-  risk.table.y.text.col = TRUE,
-  size=1.5
-  ) 
-
-pdf("plots/figureS9b.pdf", width = 5, height = 5)
-print(p_sl,
         surv.plot.height = 0.7,
   risk.table.height = 0.3,
   newpage = FALSE)    # important: use print()
@@ -551,7 +508,17 @@ print(p, newpage = FALSE)
 dev.off()
 ```
 
+# Figure S9b - Forest Plot - Multivariate Model - Slide Level Predictions
 
+```{r}
+model <- coxph(Surv(time_months, event) ~ Pn + pN + cluster_sl + `bone invasion` + ene,
+               data = clin, ties = "exact", x = TRUE, model = TRUE)
+
+pdf("plots/figureS9b.pdf", width = 7, height = 4)
+p <- ggforest(model, data = model.frame(model))
+print(p, newpage = FALSE)
+dev.off()
+```
 
 # Figure 3f
 
