@@ -29,7 +29,7 @@ per pathway ‘clin’ = clinical metadata
     pred <- read_tsv("data/lmu_tapas.tsv")
 
     ## Rows: 14924 Columns: 7
-    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (3): slide_id, pathway, location
     ## dbl (4): case_id, num_tumor_patches, TAPAS, slide_level_prediction_score
@@ -40,7 +40,7 @@ per pathway ‘clin’ = clinical metadata
     clin <- read_tsv("data/lmu_clinical_data.tsv")
 
     ## Rows: 112 Columns: 17
-    ## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (11): sex (male), radio(-chemotherapy) (yes), location, pT, pN, grading,...
     ## dbl  (6): case_id, age, disease recurrence, time from op to recurrence or la...
@@ -299,6 +299,42 @@ predictive LRP-positive fractions are representative for the slide.
     ## quartz_off_screen 
     ##                 2
 
+# Figure S9a
+
+    df_for_mat_sl <- pred %>%
+      filter(num_tumor_patches>100) %>%
+      select(slide_id, pathway, slide_level_prediction_score, case_id, location) %>%
+      spread(key="pathway", value="slide_level_prediction_score") 
+    mat_sl <- apply(as.matrix(df_for_mat_sl[,-c(1:3)]),2,as.numeric)
+    rownames(mat_sl) <- df_for_mat_sl$slide_id
+
+    column_annotation <- HeatmapAnnotation(
+      type=df_for_mat_sl$location,
+      col = list(
+        type=c("P"="grey80","LMET"="#117733")
+      )
+    )
+
+    set.seed(1)
+    ht_sl <- Heatmap(t(mat_sl), 
+            show_column_names = FALSE,
+            column_km = 2,
+            row_km=2,
+            name="Slide-level prediction score",
+           column_title = c("metabolic persistence","oncogenic growth"),
+            row_title=c("",""), show_row_dend = FALSE,
+            col = colorRamp2(c(0, 0.5, 1), c("#113644", "white", "#d55900")),
+            top_annotation = column_annotation)
+
+
+    pdf("plots/figureS9a.pdf", width = 7, height = 3)
+    set.seed(1)
+    ht_drawn_sl <- draw(ht_sl)
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
 # Figure 3b - Waterfall plot of number of slides per resection specimen
 
     # extract clustering assignments and summarize on patient level
@@ -307,8 +343,14 @@ predictive LRP-positive fractions are representative for the slide.
     pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
     patient_clusters = table(pred$case_id, pred$cluster) / 14
 
+    column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
+    cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
+    pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "metabolic persistence", "oncogenic growth")
+    patient_clusters_sl = table(pred$case_id, pred$cluster_sl) / 14
+
     # assign patients to cluster group by most abundant cluster
     clin$cluster <- if_else(patient_clusters[,1]>patient_clusters[,2], "metabolic persistence", "oncogenic growth")
+    clin$cluster_sl <- if_else(patient_clusters_sl[,1]>patient_clusters_sl[,2], "metabolic persistence", "oncogenic growth")
 
     # create dataframe for waterfall plot
     patients_cluster_df <- as_tibble(as.data.frame(patient_clusters))
@@ -335,17 +377,20 @@ predictive LRP-positive fractions are representative for the slide.
       theme(axis.text.x = element_blank(),
             axis.ticks.x = element_blank()) 
 
-![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](lmu_patient_stratification_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
     ggsave("plots/figure3b.pdf", height = 3, width = 5)
 
 # Figure 3c - Clusters ~ P vs LMET
 
     # extract clustering assignments and summarize on patient level
-    column_order_list <- ComplexHeatmap:::column_order(ht_drawn) 
-    cluster1_slides <- rownames(mat)[column_order_list$`1`]
-    pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
+    #column_order_list <- ComplexHeatmap:::column_order(ht_drawn) 
+    #cluster1_slides <- rownames(mat)[column_order_list$`1`]
+    #pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
 
+    #column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
+    #cluster1_slides_sl <- rownames(mat_sl)[column_order_list$`1`]
+    #pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "metabolic persistence", "oncogenic growth")
 
     pred %>%
       select(slide_id, location, cluster) %>%
@@ -358,7 +403,7 @@ predictive LRP-positive fractions are representative for the slide.
       theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
       ylab("fraction")
 
-![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](lmu_patient_stratification_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
     ggsave("plots/figure3c.pdf",height = 3, width = 2.5)
 
@@ -406,6 +451,40 @@ predictive LRP-positive fractions are representative for the slide.
 
     pdf("plots/figure3d.pdf", width = 5, height = 5)
     print(p,
+            surv.plot.height = 0.7,
+      risk.table.height = 0.3,
+      newpage = FALSE)    # important: use print()
+    dev.off()
+
+    ## quartz_off_screen 
+    ##                 2
+
+# Figure S9b - Kaplan-Meier curve - Univariante analysis for recurrence-free survival
+
+    surv_obj_sl <- Surv(time = as.numeric(clin$`time from op to recurrence or last follow up(days)`) /  30.44, 
+                       event = as.numeric(clin$`disease recurrence`))
+
+    km_fit_sl <- survfit(surv_obj ~ cluster_sl , clin)
+
+    p_sl <- ggsurvplot(
+      km_fit_sl,
+      data = clin,
+      pval = TRUE,                 # Show p-value for log-rank test
+      conf.int = FALSE,             # Show confidence interval
+      risk.table = TRUE,           # Include risk table below the plot
+      palette = c("#d50000", "#0072B2"),  # Custom colors
+      xlab = "Time (months)",        # X-axis label
+      ylab = "Disease recurrence after surgery", # Y-axis label
+      legend.title = "",
+      legend.labs = c("OG", "MP"),
+      xlim = c(0,12*3),
+      break.time.by = 3,
+      risk.table.y.text.col = TRUE,
+      size=1.5
+      ) 
+
+    pdf("plots/figureS9b.pdf", width = 5, height = 5)
+    print(p_sl,
             surv.plot.height = 0.7,
       risk.table.height = 0.3,
       newpage = FALSE)    # important: use print()
@@ -569,6 +648,6 @@ predictive LRP-positive fractions are representative for the slide.
       ylab("TAPAS") +
       scale_fill_manual(values = c("#CCCCCC","#117733")) 
 
-![](lmu_patient_stratification_tapas_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](lmu_patient_stratification_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
     ggsave("plots/figure3f.pdf", height = 3, width = 12)
