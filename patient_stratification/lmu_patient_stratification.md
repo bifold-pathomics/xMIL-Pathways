@@ -285,7 +285,7 @@ predictive LRP-positive fractions are representative for the slide.
             column_km = 2,
             row_km=2,
             name="TAPAS",
-           column_title = c("metabolic persistence","oncogenic growth"),
+            column_title = c("metabolic persistence","oncogenic growth"),
             row_title=c("",""), show_row_dend = FALSE,
             col = colorRamp2(c(0, 0.5, 1), c("#0072B2", "white", "#D55E00")),
             top_annotation = column_annotation)
@@ -321,7 +321,7 @@ predictive LRP-positive fractions are representative for the slide.
             column_km = 2,
             row_km=2,
             name="Slide-level prediction score",
-           column_title = c("oncogenic growth","metabolic persistence"),
+           column_title = c("cluster1","cluster2"),
             row_title=c("",""), show_row_dend = FALSE,
             col = colorRamp2(c(0, 0.5, 1), c("#113644", "white", "#d55900")),
             top_annotation = column_annotation)
@@ -345,12 +345,12 @@ predictive LRP-positive fractions are representative for the slide.
 
     column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
     cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
-    pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "oncogenic growth","metabolic persistence")
+    pred$cluster_sl <- ifelse(pred$slide_id %in% cluster1_slides_sl, "cluster1","cluster2")
     patient_clusters_sl = table(pred$case_id, pred$cluster_sl) / 14
 
     # assign patients to cluster group by most abundant cluster
     clin$cluster <- if_else(patient_clusters[,1]>patient_clusters[,2], "metabolic persistence", "oncogenic growth")
-    clin$cluster_sl <- if_else(patient_clusters_sl[,1]>patient_clusters_sl[,2], "oncogenic growth", "metabolic persistence")
+    clin$cluster_sl <- if_else(patient_clusters_sl[,1]>patient_clusters_sl[,2], "cluster1", "cluster2")
 
     # create dataframe for waterfall plot
     patients_cluster_df <- as_tibble(as.data.frame(patient_clusters))
