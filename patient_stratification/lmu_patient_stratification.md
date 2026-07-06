@@ -342,7 +342,7 @@ predictive LRP-positive fractions are representative for the slide.
     cluster1_slides <- rownames(mat)[column_order_list$`1`]
     pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
     patient_clusters = table(pred$case_id, pred$cluster) / 14
-    write_csv(pred, file="data/lmu_tapas_with_group_label.tsv")
+    write_tsv(pred, file="data/lmu_tapas_with_group_label.tsv")
 
     column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
     cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
@@ -599,25 +599,58 @@ predictive LRP-positive fractions are representative for the slide.
 
 # Figure 3f
 
+    library(tidyverse)
+    library(ggsignif)
+
     pred$location <- factor(pred$location, levels = c("P", "LMET"))
 
-    pred %>%
+    plot_df <- pred %>%
       select(case_id, location, TAPAS, pathway) %>%
       group_by(case_id, location, pathway) %>%
-      summarise(mean_lrp = mean(as.numeric(TAPAS), na.rm = TRUE), .groups = "drop") %>%
-      ggplot(aes(x = location, y = mean_lrp)) +
-      geom_boxplot(aes(fill = location), alpha=0.6) +
+      summarise(mean_lrp = mean(as.numeric(TAPAS), na.rm = TRUE), .groups = "drop")
+
+    stat_df <- plot_df %>%
+      group_by(pathway) %>%
+      summarise(
+        p = t.test(mean_lrp ~ location)$p.value,
+        .groups = "drop"
+      ) %>%
+      mutate(
+        p_adj = p.adjust(p, method = "BH"),
+        annotation = case_when(
+          p_adj < 0.001 ~ "***",
+          p_adj < 0.01  ~ "**",
+          p_adj < 0.05  ~ "*",
+          TRUE ~ "ns"
+        ),
+        xmin = "P",
+        xmax = "LMET",
+        y_position = 1.0      # fixed height for every facet
+      )
+
+    ggplot(plot_df, aes(x = location, y = mean_lrp)) +
+      geom_boxplot(aes(fill = location), alpha = 0.6) +
       geom_signif(
-        comparisons = list(c("LMET", "P")),
-        map_signif_level = TRUE,
-        test = "t.test",
-        y_position = 1  # adjust based on your data
+        data = stat_df,
+        aes(
+          xmin = xmin,
+          xmax = xmax,
+          annotations = annotation,
+          y_position = y_position
+        ),
+        manual = TRUE,
+        inherit.aes = FALSE
       ) +
-      ylim(0,1.2) +
       facet_grid(~pathway, scales = "free_y") +
+      coord_cartesian(ylim = c(0, 1.2)) +
       theme_classic() +
       ylab("TAPAS") +
-      scale_fill_manual(values = c("#CCCCCC","#117733")) 
+      xlab(NULL) +
+      scale_fill_manual(values = c("#CCCCCC", "#117733"))
+
+    ## Warning in geom_signif(data = stat_df, aes(xmin = xmin, xmax = xmax,
+    ## annotations = annotation, : Ignoring unknown aesthetics: xmin, xmax,
+    ## annotations, and y_position
 
 ![](lmu_patient_stratification_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
