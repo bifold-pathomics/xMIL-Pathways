@@ -29,7 +29,7 @@ per pathway ‘clin’ = clinical metadata
     pred <- read_tsv("data/lmu_tapas.tsv")
 
     ## Rows: 14924 Columns: 7
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (3): slide_id, pathway, location
     ## dbl (4): case_id, num_tumor_patches, TAPAS, slide_level_prediction_score
@@ -40,7 +40,7 @@ per pathway ‘clin’ = clinical metadata
     clin <- read_tsv("data/lmu_clinical_data.tsv")
 
     ## Rows: 112 Columns: 17
-    ## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    ## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
     ## Delimiter: "\t"
     ## chr (11): sex (male), radio(-chemotherapy) (yes), location, pT, pN, grading,...
     ## dbl  (6): case_id, age, disease recurrence, time from op to recurrence or la...
@@ -342,6 +342,7 @@ predictive LRP-positive fractions are representative for the slide.
     cluster1_slides <- rownames(mat)[column_order_list$`1`]
     pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
     patient_clusters = table(pred$case_id, pred$cluster) / 14
+    write_csv(pred, file="data/lmu_tapas_with_group_label.tsv")
 
     column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
     cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
