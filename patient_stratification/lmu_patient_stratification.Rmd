@@ -279,7 +279,7 @@ column_order_list <- ComplexHeatmap:::column_order(ht_drawn)
 cluster1_slides <- rownames(mat)[column_order_list$`1`]
 pred$cluster <- ifelse(pred$slide_id %in% cluster1_slides, "metabolic persistence", "oncogenic growth")
 patient_clusters = table(pred$case_id, pred$cluster) / 14
-write_csv(pred, file="data/lmu_tapas_with_group_label.tsv")
+write_tsv(pred, file="data/lmu_tapas_with_group_label.tsv")
 
 column_order_list_sl <- ComplexHeatmap:::column_order(ht_drawn_sl) 
 cluster1_slides_sl <- rownames(mat_sl)[column_order_list_sl$`1`]
